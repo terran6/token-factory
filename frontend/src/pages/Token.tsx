@@ -60,16 +60,16 @@ function Token() {
                 if(tokenData.address && data.address && data.amount) {
                     if(dialogType === "MINT") {
                         await execute.mintToken(
-                            tokenData.address, 
-                            data.amount.toString(), 
+                            tokenData, 
+                            data, 
                             connectedWallet
                         );
                         enqueueSnackbar(`Tokens ${dialogType?.toLowerCase()}ed successfully`, {variant: "success"});
                     }
                     else {
                         await execute.burnToken(
-                            tokenData.address, 
-                            data.amount.toString(), 
+                            tokenData, 
+                            data, 
                             connectedWallet
                         );
                         enqueueSnackbar(`Tokens ${dialogType?.toLowerCase()}ed successfully`, {variant: "success"});

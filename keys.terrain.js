@@ -1,6 +1,6 @@
 module.exports = {
   test: {
     mnemonic:
-      "notice oak worry limit wrap speak medal online prefer cluster roof addict wrist behave treat actual wasp year salad speed social layer crew genius",
+      "talent spoon civil inmate frame decrease alert slogan prefer squeeze clap summer milk leaf heavy arrive end idle ski exist enrich canoe brain such",
   }
 };

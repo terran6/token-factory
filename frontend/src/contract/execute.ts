@@ -1,6 +1,8 @@
 import { LCDClient, MsgExecuteContract, Coin } from "@terra-money/terra.js";
 import { ConnectedWallet } from "@terra-money/wallet-provider";
+import { SubmitTokenData } from "../components/TokenDialog";
 import { Address } from "../models/address";
+import { TokenData } from "../models/query";
 import { Token, TokenUtils } from "../models/token";
 import { factoryAddress } from "./address";
 
@@ -42,8 +44,8 @@ const _exec =
 
 // ==== execute contract ====
 export const mintToken = async (
-  tokenAddress: Address,
-  amount: string,
+  tokenData: TokenData,
+  userData: SubmitTokenData,
   wallet: ConnectedWallet
 ) => {
   const executeMsg = [
@@ -53,13 +55,13 @@ export const mintToken = async (
       {
         deposit: {
           mint: {
-            token_address: tokenAddress,
-            recipient: wallet.walletAddress,
+            token_address: tokenData.address,
+            recipient: userData.address,
             allowance_address: factoryAddress(wallet)
           }
         }
       },
-      [new Coin("uluna", (Number(amount) * (10 ** DECIMALS)).toString())]
+      [new Coin("uluna", (Number(userData.amount) * (10 ** DECIMALS)).toString())]
     )
   ]
   return _exec(executeMsg)(wallet);
@@ -82,18 +84,18 @@ export const createNewToken = async (token: Token, wallet: ConnectedWallet) => {
 }
 
 export const burnToken = async (
-  tokenAddress: Address,
-  amount: string,
+  tokenData: TokenData,
+  userData: SubmitTokenData,
   wallet: ConnectedWallet
 ) => {
   const executeMsg = [
     new MsgExecuteContract(
       wallet.walletAddress,
-      tokenAddress,
+      tokenData.address as string,
       {
         increase_allowance: {
           spender: factoryAddress(wallet),
-          amount: (Number(amount) * 10 ** DECIMALS).toString()
+          amount: (Number(userData.amount) * 10 ** DECIMALS).toString()
         }
       }
     ),
@@ -102,18 +104,18 @@ export const burnToken = async (
       factoryAddress(wallet),
       {
         burn: {
-          token_address: tokenAddress,
-          amount: (Number(amount) * 10 ** DECIMALS).toString()
+          token_address: tokenData.address,
+          amount: (Number(userData.amount) * 10 ** DECIMALS).toString()
         }
       }
     ),
     new MsgExecuteContract(
       wallet.walletAddress,
-      tokenAddress,
+      tokenData.address as string,
       {
         decrease_allowance: {
           spender: factoryAddress(wallet),
-          amount: (Number(amount) * 10 ** DECIMALS).toString()
+          amount: (Number(userData.amount) * 10 ** DECIMALS).toString()
         }
       }
     )
